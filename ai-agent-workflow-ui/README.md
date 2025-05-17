@@ -14,6 +14,9 @@ A React-based frontend for managing AI agent workflows.
 1. Install dependencies:
 ```bash
 npm install
+
+# use yarn instead of npm to manange dependencies to avoid conflicts
+yarn install
 ```
 
 2. Start development server:

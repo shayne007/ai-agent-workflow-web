@@ -1,46 +1,38 @@
 import axios from 'axios';
 
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api';
+
 const api = axios.create({
-  baseURL: 'http://localhost:3001/api', // TODO: Update with actual backend URL
-  timeout: 5000,
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-export const fetchWorkflows = async () => {
-  try {
-    const response = await api.get('/workflows');
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching workflows:', error);
-    throw error;
-  }
-};
+// Request interceptor for adding auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-export const saveWorkflow = async (workflow: any) => {
-  try {
-    const response = await api.post('/workflows', workflow);
-    return response.data;
-  } catch (error) {
-    console.error('Error saving workflow:', error);
-    throw error;
+// Response interceptor for handling errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle specific error codes
+    if (error.response && error.response.status === 401) {
+      // Handle unauthorized access
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
   }
-};
+);
 
-export const executeWorkflow = async (workflowId: string) => {
-  try {
-    const response = await api.post(`/workflows/${workflowId}/execute`);
-    return response.data;
-  } catch (error) {
-    console.error('Error executing workflow:', error);
-    throw error;
-  }
-};
-
-export const getExecutionStatus = async (executionId: string) => {
-  try {
-    const response = await api.get(`/executions/${executionId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching execution status:', error);
-    throw error;
-  }
-};
+export default api;
