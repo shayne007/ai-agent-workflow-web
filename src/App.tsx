@@ -19,12 +19,15 @@ function App() {
           <Sidebar />
           <div className="content-area">
             <Routes>
-              <Route path="/" element={<ChatInterface />} />
+              <Route path="/" element={<div />} />
               <Route path="/loan/request" element={<LoanRequestForm />} />
               <Route path="/loan/status" element={<LoanStatus />} />
               <Route path="/workflow/monitor" element={<WorkflowMonitor />} />
               <Route path="/review" element={<HumanReviewInterface />} />
             </Routes>
+          </div>
+          <div className="chat-area">
+            <ChatInterface />
           </div>
         </div>
         <Footer />

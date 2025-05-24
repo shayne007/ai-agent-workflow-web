@@ -1,6 +1,10 @@
 # AI Agent Workflow UI
 
 A React-based frontend for managing AI agent workflows.
+##
+web ui layout
+
+![Homepage Layout](./homepage_layout.png)
 
 ## Features
 
